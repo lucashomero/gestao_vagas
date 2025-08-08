@@ -1,6 +1,8 @@
 package br.com.lucashomero.gestao_vagas.modules.candidate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,20 +13,27 @@ import br.com.lucashomero.gestao_vagas.modules.candidate.dto.AuthCandidateReques
 import br.com.lucashomero.gestao_vagas.modules.candidate.useCases.AuthCandidateUseCase;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/candidate")
 public class AuthCandidateController {
 	
 	@Autowired
 	private AuthCandidateUseCase authCandidateUseCase;
 	
-	@PostMapping("/candidate")
+	@PostMapping("/auth")
 	public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO authCandidateRequestDTO) {
 		
 		try {
 			
+			var token = this.authCandidateUseCase.execute(authCandidateRequestDTO);
+			return ResponseEntity.ok().body(token);
+			
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+			
+			
 		}
-		
+		 
 	}
 }
